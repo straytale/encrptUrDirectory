@@ -11,6 +11,15 @@
 char filenames[MAX_FILES][2][MAX_NAME_LEN]; // [index][0: name, 1: size]
 int file_index = 0;
 
+static inline const char *get_basename(const char *path)
+{
+    const char *slash = strrchr(path, '/');
+    const char *backslash = strrchr(path, '\\');
+
+    const char *separator = (slash > backslash) ? slash : backslash;
+    return (separator) ? separator + 1 : path;
+}
+
 static inline void list_dir_recursive(const char *path)
 {
     DIR *dir = opendir(path);
