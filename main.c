@@ -53,7 +53,7 @@ int main(void)
     _mkdir(folderName);
 
     // encrpt file
-    for (int i = 0; i < file_index; i++)
+    for (int i = 0; i < 100; i++)
     {
         FILE *fp = fopen(filenames[i][0], "rb");
         if (!fp)
@@ -77,9 +77,12 @@ int main(void)
         size_t bytesRead;
         while ((bytesRead = fread(buffer, 1, CHUNK_SIZE, fp)) > 0)
         {
-            fwrite(buffer, 1, bytesRead, output);
+            char *a = aes128(buffer, bytesRead, "1234567890ABCDEFG", BASE128, ENCRYPT);
+            char *b = aes128(a, bytesRead + (BASE128 - (bytesRead % BASE128)), "1234567890ABCDEFG", BASE128, DECRYPT);
+            fwrite(b, 1, bytesRead, output);
+            free(a);
+            free(b);
         }
-
         fclose(fp);
         fclose(output);
     }

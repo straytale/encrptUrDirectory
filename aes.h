@@ -29,6 +29,6 @@ typedef struct
  * @param operation Operation type: 0 for decryption, 1 for encryption.
  * @return          Pointer to the output data buffer (may allocate new memory).
  */
-U8 *aes128(const U8 *data, U8 data_len, const U8 *key, U8 key_len, U8 operation);
+U8 *aes128(const U8 *data, U32 data_len, const U8 *key, U8 key_len, U8 operation);
 
 #endif

@@ -269,13 +269,13 @@ void AES_ECB_decrypt(const AES_ctx *ctx, U8 *buf)
 }
 
 // AES wrapper with ECB + PKCS7 (simulate your aes128 function)
-U8 *aes128(const U8 *data, U8 data_len, const U8 *key, U8 key_len, U8 operation)
+U8 *aes128(const U8 *data, U32 data_len, const U8 *key, U8 key_len, U8 operation)
 {
     if (!data || !key || key_len != BASE128)
         return NULL;
 
     // Calculate padded length (multiple of 16)
-    U8 padded_len = ((data_len / BASE128) + 1) * BASE128;
+    U32 padded_len = ((data_len / BASE128) + 1) * BASE128;
 
     U8 *buffer = malloc(padded_len);
     if (!buffer)
@@ -291,22 +291,22 @@ U8 *aes128(const U8 *data, U8 data_len, const U8 *key, U8 key_len, U8 operation)
     {
         // PKCS#7 padding
         U8 pad = padded_len - data_len;
-        for (U8 i = data_len; i < padded_len; i++)
+        for (U32 i = data_len; i < padded_len; i++)
             buffer[i] = pad;
 
-        for (U8 i = 0; i < padded_len; i += BASE128)
+        for (U32 i = 0; i < padded_len; i += BASE128)
             AES_ECB_encrypt(&ctx, buffer + i);
     }
     else if (operation == DECRYPT)
     {
-        for (U8 i = 0; i < padded_len; i += BASE128)
+        for (U32 i = 0; i < padded_len; i += BASE128)
             AES_ECB_decrypt(&ctx, buffer + i);
 
         // Remove PKCS#7 padding
         U8 pad = buffer[padded_len - 1];
         if (pad <= BASE128)
         {
-            for (U8 i = 0; i < pad; i++)
+            for (U32 i = 0; i < pad; i++)
             {
                 if (buffer[padded_len - 1 - i] != pad)
                     return buffer; // Invalid padding; return raw data
